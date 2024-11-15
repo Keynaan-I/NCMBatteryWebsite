@@ -63,8 +63,9 @@ var BDI_001 = {
     ShowThankYou: true,
     ShowInstructions: false,  
 }
-var default = { 
-    questionnaire: ['bdi', ''] 
+
+var Questionnaire_default = { 
+    questionnaire: ['bdi', ''], 
     AskForNotes: false,
     ShowWelcome: false,
     ShowThankYou: false,
@@ -102,12 +103,12 @@ var EQ5D_001 = {
     ShowInstructions: false,  
 }
 
-add('AES_001', function(){ parameters = AES_001});
-add('STAI_S_001', function(){ parameters = STAI_S_001});
-add('STAI_S_002', function(){ parameters = STAI_S_002});
-add('STAI_T_001', function(){ parameters = STAI_T_001});
-add('BDI_001', function(){ parameters = BDI_001});
-add('BDI_002', function(){ parameters = BDI_002});
-add('GDS_001', function(){ parameters = GDS_001});
-add('EQ5D_001', function(){ parameters = EQ5D_001});
-add('MusicDemographics_001', function(){ parameters = MusicDemographics_001});
+// add('AES_001', function(){ parameters = AES_001});
+// add('STAI_S_001', function(){ parameters = STAI_S_001});
+// add('STAI_S_002', function(){ parameters = STAI_S_002});
+// add('STAI_T_001', function(){ parameters = STAI_T_001});
+// add('BDI_001', function(){ parameters = BDI_001});
+// add('BDI_002', function(){ parameters = BDI_002});
+// add('GDS_001', function(){ parameters = GDS_001});
+// add('EQ5D_001', function(){ parameters = EQ5D_001});
+// add('MusicDemographics_001', function(){ parameters = MusicDemographics_001});

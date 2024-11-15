@@ -23,7 +23,7 @@ var GiveFeedback = true;
 // How are the circle locations specified?
 var LocationsAsProportions = true;
 
-var ImageCopy_Default = {
+export var ImageCopy_Default = {
 	canvas_width:400,
 	canvas_height:400,
 	ShowWelcome: true,
@@ -102,12 +102,12 @@ var ImageCopy_FaCE_VerB= {
 }
 
 
-add('ImageCopy_Default', function(){ parameters = ImageCopy_Default});
-add('ImageCopy_Smile', function(){ parameters = ImageCopy_Smile});
-add('ImageCopy_TwoCircles', function(){ parameters = ImageCopy_TwoCircles});
-add('ImageCopy_CBprotocol', function(){ parameters = ImageCopy_CBprotocol});
-add('ImageCopy_FaCE', function(){ parameters = ImageCopy_FaCE});
-add('ImageCopy_FaCE_Training', function(){ parameters = ImageCopy_FaCE_Training});
-add('ImageCopy_FaCE_VerA', function(){ parameters = ImageCopy_FaCE_VerA});
-add('ImageCopy_FaCE_VerB', function(){ parameters = ImageCopy_FaCE_VerB});
+//// add('ImageCopy_Default', function(){ parameters = ImageCopy_Default});
+//// add('ImageCopy_Smile', function(){ parameters = ImageCopy_Smile});
+//// add('ImageCopy_TwoCircles', function(){ parameters = ImageCopy_TwoCircles});
+//// add('ImageCopy_CBprotocol', function(){ parameters = ImageCopy_CBprotocol});
+//// add('ImageCopy_FaCE', function(){ parameters = ImageCopy_FaCE});
+//// add('ImageCopy_FaCE_Training', function(){ parameters = ImageCopy_FaCE_Training});
+//// add('ImageCopy_FaCE_VerA', function(){ parameters = ImageCopy_FaCE_VerA});
+//// add('ImageCopy_FaCE_VerB', function(){ parameters = ImageCopy_FaCE_VerB});
 

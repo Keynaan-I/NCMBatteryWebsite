@@ -1,4 +1,4 @@
-var WordRecog_Default = {
+export var WordRecog_Default = {
 	FolderName: 'RAVLT_en_US-Neural2-F_Speed100/',
 	WordList: 'RAVLT',
 	FileExtension: '.wav',

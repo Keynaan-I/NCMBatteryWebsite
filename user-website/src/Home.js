@@ -52,9 +52,7 @@ function Home({ selectedItems, setSelectedItems }) {
     { name: "Fluency, Animals", imgSrc: YesNo },
     { name: "Verbal DMS", imgSrc: VerbalDMS },
     { name: "Spatial DMS", imgSrc: SpatialDMS },
-    { name: "STAI-T", imgSrc: MultiChoice },
-    { name: "STAI-S", imgSrc: MultiChoice },
-    { name: "BDI", imgSrc: MultiChoice },
+    { name: "Questionnaire", imgSrc: MultiChoice }
   ];
 
   function getImageSource(formName) {
@@ -79,7 +77,7 @@ function Home({ selectedItems, setSelectedItems }) {
       "Fluency, Animals": YesNo,
       "Verbal DMS": VerbalDMS,
       "Spatial DMS": SpatialDMS,
-      "Questionnare": MultiChoice,
+      "Questionnaire": MultiChoice,
     };
   
     return formImages[formName] || "/assets/Icons/default.png";  // Fallback image if form name is not found

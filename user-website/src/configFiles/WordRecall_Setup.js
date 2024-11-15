@@ -6,7 +6,7 @@ var FixationTimeBetweenWords = 200 // milliseconds
 
 
 
-var WordRecall_Default = {
+export var WordRecall_Default = {
 	FolderName: 'RAVLTSet001/', // dropdown: RAVLT_en_US-Neural2-F_Speed100, Demo, RAVLT_fr_FR-Neural2-A_Speed100
 	WordList: 'RAVLT', // EN_RAVLT, EN_Demo, FR_RAVLT
 	FileExtension: '.wav', // This is the only option now
@@ -23,8 +23,15 @@ var WordRecall_Default = {
 	RecordAUDIO: false,
 }
 
+export var Questionnaire_default = { 
+    Questionnaire: ['bdi', 'gds','stai_trait','stai_state','IntakeForm_Music'], 
+    AskForNotes: false,
+    ShowWelcome: false,
+    ShowThankYou: false,
+    ShowInstructions: false,  
+}
 
-var RAVLT_Default = {
+export var RAVLT_Default = {
 	FolderName: 'RAVLTSet001/',
 	WordList: 'RAVLT',
 	FileExtension: '.wav',
@@ -392,28 +399,28 @@ var TEST_Spoken = {
 }
 
 
-add('RAVLT_Manual_Immediate', function(){ parameters = RAVLT_Manual_Immediate});
-add('RAVLT_Spoken_Immediate', function(){ parameters = RAVLT_Spoken_Immediate});
-add('RAVLT_Spoken_Immediate_002', function(){ parameters = RAVLT_Spoken_Immediate_002});
-add('RAVLT_Manual_Delayed', function(){ parameters = RAVLT_Manual_Delayed});
-add('RAVLT_Spoken_Delayed', function(){ parameters = RAVLT_Spoken_Delayed});
-add('RAVLT_Spoken_Delayed_002', function(){ parameters = RAVLT_Spoken_Delayed_002});
+//// add('RAVLT_Manual_Immediate', function(){ parameters = RAVLT_Manual_Immediate});
+//// add('RAVLT_Spoken_Immediate', function(){ parameters = RAVLT_Spoken_Immediate});
+//// add('RAVLT_Spoken_Immediate_002', function(){ parameters = RAVLT_Spoken_Immediate_002});
+//// add('RAVLT_Manual_Delayed', function(){ parameters = RAVLT_Manual_Delayed});
+//// add('RAVLT_Spoken_Delayed', function(){ parameters = RAVLT_Spoken_Delayed});
+//// add('RAVLT_Spoken_Delayed_002', function(){ parameters = RAVLT_Spoken_Delayed_002});
 
-add('FaCE_Immediate_Spoken_Training_EN', function(){ parameters = FaCE_Immediate_Spoken_Training_EN});
-add('FaCE_Immediate_Spoken_VerA_EN', function(){ parameters = FaCE_Immediate_Spoken_VerA_EN});
-add('FaCE_Immediate_Spoken_VerB_EN', function(){ parameters = FaCE_Immediate_Spoken_VerB_EN});
+//// add('FaCE_Immediate_Spoken_Training_EN', function(){ parameters = FaCE_Immediate_Spoken_Training_EN});
+//// add('FaCE_Immediate_Spoken_VerA_EN', function(){ parameters = FaCE_Immediate_Spoken_VerA_EN});
+//// add('FaCE_Immediate_Spoken_VerB_EN', function(){ parameters = FaCE_Immediate_Spoken_VerB_EN});
 
-add('FaCE_Immediate_Manual_Training_EN', function(){ parameters = FaCE_Immediate_Manual_Training_EN});
-add('FaCE_Immediate_Manual_VerA_EN', function(){ parameters = FaCE_Immediate_Manual_VerA_EN});
-add('FaCE_Immediate_Manual_VerB_EN', function(){ parameters = FaCE_Immediate_Manual_VerB_EN});
+//// add('FaCE_Immediate_Manual_Training_EN', function(){ parameters = FaCE_Immediate_Manual_Training_EN});
+//// add('FaCE_Immediate_Manual_VerA_EN', function(){ parameters = FaCE_Immediate_Manual_VerA_EN});
+//// add('FaCE_Immediate_Manual_VerB_EN', function(){ parameters = FaCE_Immediate_Manual_VerB_EN});
 
-add('FaCE_Delayed_Spoken_Training_EN', function(){ parameters = FaCE_Delayed_Spoken_Training_EN});
-add('FaCE_Delayed_Spoken_VerA_EN', function(){ parameters = FaCE_Delayed_Spoken_VerA_EN});
-add('FaCE_Delayed_Spoken_VerB_EN', function(){ parameters = FaCE_Delayed_Spoken_VerB_EN});
+//// add('FaCE_Delayed_Spoken_Training_EN', function(){ parameters = FaCE_Delayed_Spoken_Training_EN});
+//// add('FaCE_Delayed_Spoken_VerA_EN', function(){ parameters = FaCE_Delayed_Spoken_VerA_EN});
+//// add('FaCE_Delayed_Spoken_VerB_EN', function(){ parameters = FaCE_Delayed_Spoken_VerB_EN});
 
-add('FaCE_Delayed_Manual_Training_EN', function(){ parameters = FaCE_Delayed_Manual_Training_EN});
-add('FaCE_Delayed_Manual_VerA_EN', function(){ parameters = FaCE_Delayed_Manual_VerA_EN});
-add('FaCE_Delayed_Manual_VerB_EN', function(){ parameters = FaCE_Delayed_Manual_VerB_EN});
+//// add('FaCE_Delayed_Manual_Training_EN', function(){ parameters = FaCE_Delayed_Manual_Training_EN});
+//// add('FaCE_Delayed_Manual_VerA_EN', function(){ parameters = FaCE_Delayed_Manual_VerA_EN});
+//// add('FaCE_Delayed_Manual_VerB_EN', function(){ parameters = FaCE_Delayed_Manual_VerB_EN});
 
 
 
@@ -446,7 +453,7 @@ var DemoEN = {
 	AskForNotes: false,
 	RecordAUDIO: true
 }
-add('DemoEN', function(){ parameters = DemoEN});
+// add('DemoEN', function(){ parameters = DemoEN});
 
 var DemoENDelayed = {
 	// specify the word list to use
@@ -473,7 +480,7 @@ var DemoENDelayed = {
 	AskForNotes: false,
 	RecordAUDIO: true
 }
-add('DemoENDelayed', function(){ parameters = DemoENDelayed});
+//// add('DemoENDelayed', function(){ parameters = DemoENDelayed});
 
 
 var DemoENManual = {
@@ -502,4 +509,4 @@ var DemoENManual = {
 	AskForNotes: false,
 	RecordAUDIO: true
 }
-add('DemoENManual', function(){ parameters = DemoENManual});
+//// add('DemoENManual', function(){ parameters = DemoENManual});
