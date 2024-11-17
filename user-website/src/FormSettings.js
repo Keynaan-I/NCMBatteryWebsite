@@ -16,15 +16,18 @@ import {RAVLT_Default, Questionnaire_default} from "./configFiles/WordRecall_Set
 import {WordRecog_Default} from "./configFiles/WordRecog_Setup"
 import {ImageCopy_Default} from "./configFiles/ImageCopy_Setup"
 // import { Questionnaire_default } from "./configFiles/Questionnaire_Setup"; //Create new default with dropdown options
-// import {} from "./configFiles/"
+
+
+//Have to make each default variable "export var/const" in the config files, 
+//some variables in config files needed to be commented out because they didnt have the var/const
+// or because the add function doesn't work here
  
 function FormSettings({ saveFormSettings }) {
   const { formName, id } = useParams();
   const navigate = useNavigate();
 
 
-  //Have to make each default variable "export var/const" in the config files, 
-  //some variables in config files needed to be commented out because they didnt have the var/const
+  
   const getDefaultConfig = (formName) => {
 
     //Switch case / If statement to collect the parameters/default values of
@@ -47,11 +50,11 @@ function FormSettings({ saveFormSettings }) {
         return PatternComparison_Default;
       case "Cancellation":
         return Cancellation_Default;
-        //Cube draw and copy  Image copy file
-      case "Matrix reas":
-        return MatrixReasoning_Default;
-// Digital span defualt contains variable with more paramater which causes issues when reading
-//TrailsA and B default both have more variables within which makes it harder to read
+//Cube draw and copy  Image copy file
+      // case "Matrix reas":  //Matrix doesn't work because of having a parameter within parameter
+      //   return MatrixReasoning_Default;
+// Digital span defualt doesn't work because of having a parameter within parameter
+//TrailsA and B default doesn't work because of having a parameter within parameter
       case "Subtract":
         return SerialSubtract_Default;
       case "Verbal DMS":
@@ -60,8 +63,6 @@ function FormSettings({ saveFormSettings }) {
         return SpatialDMS_Default;
       case "Questionnaire":
         return Questionnaire_default; //Questionnaire was put into word recall because it is not importing properly from the questionnaire config file
-        
-
       default:
         return {};
     }
@@ -90,8 +91,7 @@ function FormSettings({ saveFormSettings }) {
       },
     });
   };
-  console.log("Questionnaire_default");
- console.log(Questionnaire_default);
+ 
   const handleSave = () => {
     localStorage.setItem(`${formName}-${id}`, JSON.stringify(formData.settings));
     saveFormSettings(formData);

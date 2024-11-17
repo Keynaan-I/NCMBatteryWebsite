@@ -1,4 +1,4 @@
-import React from "react";
+import React,  { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from 'uuid';
 // import FormSettings from "./FormSettings"
@@ -31,6 +31,8 @@ import PatternComparison from "./assets/Icons/PatternComparison.png"
 function Home({ selectedItems, setSelectedItems }) {
   const navigate = useNavigate();
 
+
+  //Adds images to the forms. Also changes the name under the images
   const forms = [
     { name: "Intake Form", imgSrc: MultiChoice },
     { name: "Color", imgSrc: StroopColor },
@@ -55,6 +57,7 @@ function Home({ selectedItems, setSelectedItems }) {
     { name: "Questionnaire", imgSrc: MultiChoice }
   ];
 
+  // Function to get the image from a forms name
   function getImageSource(formName) {
     const formImages = {
       "Intake Form": MultiChoice,
@@ -80,30 +83,45 @@ function Home({ selectedItems, setSelectedItems }) {
       "Questionnaire": MultiChoice,
     };
   
-    return formImages[formName] || "/assets/Icons/default.png";  // Fallback image if form name is not found
+    return formImages[formName]
   }
 
+
+  //Handles clicking a form and going to a new page
   const handleFormClick = (formName) => {
     const uniqueId = uuidv4();  // Generate a unique ID for each form instance
     navigate(`/settings/${formName}/${uniqueId}`);
   };
 
+  // Handles when removing an added/edited form.
   const handleRemove = (id) => {
     const updatedItems = selectedItems.filter(item => item.id !== id);
     setSelectedItems(updatedItems);
   };
 
-  const saveAsBattery = () => {
-    const batteryData = selectedItems.map(item => {
-      const savedSettings = JSON.parse(localStorage.getItem(`${item.name}-${item.id}`)) || {};
-      return {
-        id: item.id,
-        name: item.name,
-        settings: savedSettings
-      };
-    });
 
-    const jsonString = JSON.stringify(batteryData, null, 2);  // Pretty print JSON with indentation
+  //Adds the battery to the battery.json, meaning it saves the forms and 
+  //all their edited parameters etc.
+  const saveAsBattery = () => {
+    const batteryData = {
+      batteryName,
+      description,
+      BatteryInstructions,
+      Language,
+      RunAudioTest,
+      Footer,
+      forms: selectedItems.map((item) => {
+        const savedSettings =
+          JSON.parse(localStorage.getItem(`${item.name}-${item.id}`)) || {};
+        return {
+          id: item.id,
+          name: item.name,
+          settings: savedSettings,
+        };
+      }),
+    };
+
+    const jsonString = JSON.stringify(batteryData, null, 2); // Pretty print JSON
     const blob = new Blob([jsonString], { type: "application/json" });
     const url = URL.createObjectURL(blob);
 
@@ -115,19 +133,20 @@ function Home({ selectedItems, setSelectedItems }) {
     document.body.removeChild(link);
   };
 
-  // Add these for each battery
-// name:'The 3C Platform', 
-// 	description: 'The 3C Platform',
-//   TaskList: List,
-// BatteryInstructions: "<h1>The 3C Platform</h1>",
-// Language:'EN',
-// RunAudioTest: true,
-// Footer: '©NCM Lab 2023'
+  // Global battery variables
+  const [batteryName, setBatteryName] = useState("The 3C Platform");
+  const [description, setDescription] = useState("The 3C Platform");
+  const [BatteryInstructions, setBatteryInstructions] = useState("The 3C Platform");
+  const [Language, setLanguage] = useState("EN");
+  const [RunAudioTest, setRunAudioTest] = useState(true);
+  const [Footer, setFooter] = useState("©NCM Lab 2023");    
 
 
+//The following sets up the buttons and looks
   return (
     <div className="app-container">
       <div className="selected-list">
+        {/* Displayes the forms you've selected/edited */}
         <h2>Selected Forms</h2>
         <div className="selected-items">
           {selectedItems.map((item, index) => (
@@ -143,13 +162,83 @@ function Home({ selectedItems, setSelectedItems }) {
         </div>
       </div>
 
-      <div style={{ marginTop: "20px" }}>
+      {/* Displays all the global variables to be able to edit them */}
+      <div style={{ marginTop: "10px" }}>
+      <label>
+        {"Battery name"}:
+        <input
+          type="text"
+          name="Battery name"
+          value={batteryName}
+          onChange={(e) => setBatteryName(e.target.value)}
+        />
+      </label>
+
+      <label>
+        {" Battery Description"}:
+        <input
+          type="text"
+          name="Battery Description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
+      </label>
+
+      <label>
+        {" BatteryInstructions"}:
+        <input
+          type="text"
+          name="BatteryInstructions"
+          value={BatteryInstructions || ""}
+          onChange={(e) => setBatteryInstructions(e.target.value)}
+        />
+      </label>
+
+      <label>
+        {" Footer"}:
+        <input
+          type="text"
+          name="Footer"
+          value={Footer}
+          onChange={(e) => setFooter(e.target.value)}
+        />
+      </label>
+        
+        {/* Can change to a dropdown with the options.
+        Need list of the options */}
+      <label>
+        {" Language"}:
+        <select
+          type="text"
+          name="Language"
+        >
+          <option value="EN">EN</option>
+          onChange={(e) => setLanguage(e.target.value)}
+        </select>
+      </label>
+
+      <label>
+        {" RunAudioTest"}:
+        <select
+          type="text"
+          name="RunAudioTest"
+          >  
+          <option value="true">True</option>
+          <option value="false">False</option> 
+          onChange={(e) => setRunAudioTest(e.target.value)}   
+        </select>
+        
+      </label>
+      </div>
+      {/* Save battery button to add the abttery to the battery.json */}
+      <div style={{ marginTop: "10px" }}>
         <button onClick={saveAsBattery}>Save as Battery</button>
       </div>
       
       <div className="available-forms">
         <h2>Select Forms</h2>
         <div className="forms-grid">
+          {/* Displays all the forms */}
           {forms.map((form, index) => (
             <div className="form-item" key={index} onClick={() => handleFormClick(form.name)}>
               <img src={form.imgSrc} alt={form.name} />
