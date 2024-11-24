@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 import { StroopWord_Default } from "./configFiles/StroopWord_Setup";
@@ -9,29 +9,18 @@ import { PatternComparison_Default } from "./configFiles/PatternComparison_Setup
 import { Cancellation_Default } from "./configFiles/Cancellation_Setup";
 import { MatrixReasoning_Default } from "./configFiles/MatrixReasoning_Setup";
 import { TrailMakingA_Default, TrailMakingB_Default } from "./configFiles/TrailMaking_Setup";
-import {SerialSubtract_Default} from "./configFiles/SerialSubtraction_Setup"
-import {vDMS_Default} from "./configFiles/vDMS_setup"
-import {SpatialDMS_Default} from "./configFiles/SpatialDMS_setup"  
-import {RAVLT_Default, Questionnaire_default} from "./configFiles/WordRecall_Setup"
-import {WordRecog_Default} from "./configFiles/WordRecog_Setup"
-import {ImageCopy_Default} from "./configFiles/ImageCopy_Setup"
-// import { Questionnaire_default } from "./configFiles/Questionnaire_Setup"; //Create new default with dropdown options
+import { SerialSubtract_Default } from "./configFiles/SerialSubtraction_Setup";
+import { vDMS_Default } from "./configFiles/vDMS_setup";
+import { SpatialDMS_Default } from "./configFiles/SpatialDMS_setup";
+import { RAVLT_Default, Questionnaire_default } from "./configFiles/WordRecall_Setup";
+import { WordRecog_Default } from "./configFiles/WordRecog_Setup";
+import { ImageCopy_Default } from "./configFiles/ImageCopy_Setup";
 
-
-//Have to make each default variable "export var/const" in the config files, 
-//some variables in config files needed to be commented out because they didnt have the var/const
-// or because the add function doesn't work here
- 
 function FormSettings({ saveFormSettings }) {
   const { formName, id } = useParams();
   const navigate = useNavigate();
 
-
-  
   const getDefaultConfig = (formName) => {
-
-    //Switch case / If statement to collect the parameters/default values of
-    //the according form that was clicked
     switch (formName) {
       case "Word":
         return StroopWord_Default;
@@ -41,32 +30,26 @@ function FormSettings({ saveFormSettings }) {
         return StroopColorWord_Default;
       case "Intake Form":
         return IntakeForm;
-      case "RAVLT, imm (Spoken)": 
+      case "RAVLT, imm (Spoken)":
         return RAVLT_Default;
-      case "RAVLT, Recog": 
+      case "RAVLT, Recog":
         return WordRecog_Default;
-//Card sort no default      
       case "Pattern comparison":
         return PatternComparison_Default;
       case "Cancellation":
         return Cancellation_Default;
-//Cube draw and copy  Image copy file
-      // case "Matrix reas":  //Matrix doesn't work because of having a parameter within parameter
-      //   return MatrixReasoning_Default;
-// Digital span defualt doesn't work because of having a parameter within parameter
-//TrailsA and B default doesn't work because of having a parameter within parameter
       case "Subtract":
         return SerialSubtract_Default;
       case "Verbal DMS":
         return vDMS_Default;
-      case "Spatial DMS": 
+      case "Spatial DMS":
         return SpatialDMS_Default;
       case "Questionnaire":
-        return Questionnaire_default; //Questionnaire was put into word recall because it is not importing properly from the questionnaire config file
+        return Questionnaire_default;
       default:
         return {};
     }
-  }; 
+  };
 
   const defaultSettings = getDefaultConfig(formName);
   const savedSettings = JSON.parse(localStorage.getItem(`${formName}-${id}`)) || {};
@@ -76,22 +59,16 @@ function FormSettings({ saveFormSettings }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    const fieldType = typeof formData.settings[name];
 
-    setFormData({
-      ...formData,
+    setFormData((prevFormData) => ({
+      ...prevFormData,
       settings: {
-        ...formData.settings,
-        [name]:
-          fieldType === "boolean"
-            ? value === "true"
-            : fieldType === "number"
-            ? parseFloat(value)
-            : value,
+        ...prevFormData.settings,
+        [name]: Array.isArray(prevFormData.settings[name]) ? value : value === "true" ? true : value === "false" ? false : value,
       },
-    });
+    }));
   };
- 
+
   const handleSave = () => {
     localStorage.setItem(`${formName}-${id}`, JSON.stringify(formData.settings));
     saveFormSettings(formData);
@@ -99,13 +76,9 @@ function FormSettings({ saveFormSettings }) {
   };
 
   const renderFormFields = () => {
-
     return Object.entries(formData.settings).map(([key, value]) => (
-      
       <div key={key} style={{ marginBottom: "10px" }}>
-          
         {typeof value === "boolean" ? (
-          
           <label>
             {key}:
             <select
@@ -131,7 +104,7 @@ function FormSettings({ saveFormSettings }) {
               onChange={handleChange}
             />
           </label>
-        ) : Array.isArray(value) ? (
+        ) : Array.isArray(defaultSettings[key]) ? (
           <label>
             {key}:
             <select
@@ -143,7 +116,7 @@ function FormSettings({ saveFormSettings }) {
                 })
               }
             >
-              {value.map((option, index) => (
+              {defaultSettings[key].map((option, index) => (
                 <option key={index} value={option}>
                   {option}
                 </option>
@@ -165,7 +138,6 @@ function FormSettings({ saveFormSettings }) {
       </div>
     ));
   };
-
 
   return (
     <div className="form-settings">
