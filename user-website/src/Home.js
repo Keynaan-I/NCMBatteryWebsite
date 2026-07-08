@@ -1,253 +1,190 @@
-import React,  { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { v4 as uuidv4 } from 'uuid';
-// import FormSettings from "./FormSettings"
-
-//Images
-import MultiChoice from "./assets/Icons/MultiChoice.png"
-import StroopColor from "./assets/Icons/StroopColor.png"
-import StroopWord from "./assets/Icons/StroopWord.png"
-import StroopColorWord from "./assets/Icons/StroopColorWord.png"
-import WordRecall from "./assets/Icons/WordRecall.png"
-import WordRecog from "./assets/Icons/WordRecog.png"
-import YesNo from "./assets/Icons/YesNo.png"
-import Cancellation from "./assets/Icons/Cancellation.png"
-import CardSort from "./assets/Icons/CardSort.png"
-import ClockDrawing from "./assets/Icons/ClockDrawing.png"
-import Fluency from "./assets/Icons/Fluency.png"
-import SerialSubtraction from "./assets/Icons/SerialSubtraction.png"
-import ShapeCopy from "./assets/Icons/ShapeCopy.png"
-import SpatialDMS from "./assets/Icons/SpatialDMS.png"
-import VerbalDMS from "./assets/Icons/VerbalDMS.png"
-import TrailMaking from "./assets/Icons/TrailMaking.png"
-import MatrixReasoning from "./assets/Icons/MatrixReasoning.png"
-import DigitSpan from "./assets/Icons/DigitSpan.png"
-import PatternComparison from "./assets/Icons/PatternComparison.png"
-
-
-
-
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
+import * as api from "./api";
+import { iconForTaskType } from "./iconMap";
+import { useAuth } from "./AuthContext";
 
 function Home({ selectedItems, setSelectedItems }) {
   const navigate = useNavigate();
+  const { username, csrfToken, logout } = useAuth();
 
+  const [taskTypes, setTaskTypes] = useState([]);
+  const [loadError, setLoadError] = useState(null);
+  const [saveError, setSaveError] = useState(null);
+  const [saveResult, setSaveResult] = useState(null);
+  const [saving, setSaving] = useState(false);
 
-  //Adds images to the forms. Also changes the name under the images
-  const forms = [
-    { name: "Intake Form", imgSrc: MultiChoice },
-    { name: "Color", imgSrc: StroopColor },
-    { name: "Word", imgSrc: StroopWord },
-    { name: "ColorWord", imgSrc: StroopColorWord },
-    { name: "RAVLT, imm (Spoken)", imgSrc: WordRecall },
-    { name: "RAVLT, Recog", imgSrc: WordRecog },
-    { name: "Card Sort", imgSrc: CardSort },
-    { name: "Pattern comparison", imgSrc: PatternComparison },
-    { name: "Cancellation", imgSrc: Cancellation },
-    { name: "Cube copy", imgSrc: ShapeCopy },
-    { name: "Cube draw", imgSrc: ClockDrawing },
-    { name: "Matrix reas", imgSrc: MatrixReasoning },
-    { name: "DS, Forward", imgSrc: DigitSpan },
-    { name: "DS, Backwards", imgSrc: DigitSpan },
-    { name: "Trails A", imgSrc: TrailMaking },
-    { name: "Trails B", imgSrc: TrailMaking },
-    { name: "Subtract", imgSrc: SerialSubtraction },
-    { name: "Fluency, Animals", imgSrc: YesNo },
-    { name: "Verbal DMS", imgSrc: VerbalDMS },
-    { name: "Spatial DMS", imgSrc: SpatialDMS },
-    { name: "Questionnaire", imgSrc: MultiChoice }
-  ];
+  useEffect(() => {
+    api
+      .listTaskTypes()
+      .then(setTaskTypes)
+      .catch((err) => setLoadError(err.message));
+  }, []);
 
-  // Function to get the image from a forms name
-  function getImageSource(formName) {
-    const formImages = {
-      "Intake Form": MultiChoice,
-      "Color": StroopColor,
-      "Word": StroopWord,
-      "Color/Word": StroopColorWord,
-      "RAVLT, imm (Spoken)": WordRecall,
-      "RAVLT, Recog": WordRecog,
-      "Card Sort": CardSort,
-      "Pattern comparison": PatternComparison,
-      "Cancellation": Cancellation,
-      "Cube copy": ShapeCopy,
-      "Cube draw": ClockDrawing,
-      "Matrix reas": MatrixReasoning,
-      "DS, Forward": DigitSpan,
-      "DS, Backwards": DigitSpan,
-      "Trails A": TrailMaking,
-      "Trails B": TrailMaking,
-      "Subtract": SerialSubtraction,
-      "Fluency, Animals": YesNo,
-      "Verbal DMS": VerbalDMS,
-      "Spatial DMS": SpatialDMS,
-      "Questionnaire": MultiChoice,
-    };
-  
-    return formImages[formName]
-  }
+  const taskTypeById = (id) => taskTypes.find((t) => t.task_type_id === id);
 
-
-  //Handles clicking a form and going to a new page
-  const handleFormClick = (formName) => {
-    const uniqueId = uuidv4();  // Generate a unique ID for each form instance
-    navigate(`/settings/${formName}/${uniqueId}`);
+  const handleFormClick = (taskTypeId) => {
+    const uniqueId = uuidv4(); // lets the same task type be added to a battery more than once
+    navigate(`/settings/${taskTypeId}/${uniqueId}`);
   };
 
-  // Handles when removing an added/edited form.
   const handleRemove = (id) => {
-    const updatedItems = selectedItems.filter(item => item.id !== id);
-    setSelectedItems(updatedItems);
-  };
-
-
-  //Adds the battery to the battery.json, meaning it saves the forms and 
-  //all their edited parameters etc.
-  const saveAsBattery = () => {
-    const batteryData = {
-      batteryName,
-      description,
-      BatteryInstructions,
-      Language,
-      RunAudioTest,
-      Footer,
-      forms: selectedItems.map((item) => {
-        const savedSettings =
-          JSON.parse(localStorage.getItem(`${item.name}-${item.id}`)) || {};
-        return {
-          id: item.id,
-          name: item.name,
-          settings: savedSettings,
-        };
-      }),
-    };
-
-    const jsonString = JSON.stringify(batteryData, null, 2); // Pretty print JSON
-    const blob = new Blob([jsonString], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "battery.json";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    setSelectedItems(selectedItems.filter((item) => item.id !== id));
   };
 
   // Global battery variables
+  const [batteryIndex, setBatteryIndex] = useState("");
   const [batteryName, setBatteryName] = useState("The 3C Platform");
   const [description, setDescription] = useState("The 3C Platform");
-  const [BatteryInstructions, setBatteryInstructions] = useState("The 3C Platform");
-  const [Language, setLanguage] = useState("EN");
-  const [RunAudioTest, setRunAudioTest] = useState(true);
-  const [Footer, setFooter] = useState("©NCM Lab 2023");    
+  const [batteryInstructions, setBatteryInstructions] = useState("The 3C Platform");
+  const [language, setLanguage] = useState("EN");
+  const [runAudioTest, setRunAudioTest] = useState(true);
+  const [footer, setFooter] = useState("©NCM Lab 2023");
 
+  const saveAsBattery = async () => {
+    setSaveError(null);
+    setSaveResult(null);
 
-//The following sets up the buttons and looks
+    if (!batteryIndex || !/^\d+$/.test(String(batteryIndex))) {
+      setSaveError('"Battery index" must be a whole number, and must not already be in use.');
+      return;
+    }
+    if (selectedItems.length === 0) {
+      setSaveError("Add at least one form to the battery first.");
+      return;
+    }
+    if (selectedItems.some((item) => !item.parameterId)) {
+      setSaveError(
+        "Every selected form must have a saved parameter set (open it and click Save) before the battery can be created."
+      );
+      return;
+    }
+
+    setSaving(true);
+    try {
+      const result = await api.createBattery(csrfToken, {
+        battery_index: Number(batteryIndex),
+        battery_name: batteryName,
+        description,
+        battery_instructions: batteryInstructions,
+        language,
+        run_audio_test: runAudioTest,
+        footer,
+        tasks: selectedItems.map((item) => ({
+          task_type_id: item.taskTypeId,
+          parameter_id: item.parameterId,
+          instruction_id: item.instructionId || null,
+          icon_name: item.iconName || item.parameterName,
+        })),
+      });
+      setSaveResult(result);
+    } catch (err) {
+      setSaveError(err.message);
+    } finally {
+      setSaving(false);
+    }
+  };
+
   return (
     <div className="app-container">
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <span>Signed in as {username}</span>
+        <button onClick={logout}>Log out</button>
+      </div>
+
       <div className="selected-list">
-        {/* Displayes the forms you've selected/edited */}
         <h2>Selected Forms</h2>
+        {loadError && <p style={{ color: "red" }}>{loadError}</p>}
         <div className="selected-items">
-          {selectedItems.map((item, index) => (
-            <div className="selected-item" key={index}>
-              <img src={getImageSource(item.name)} alt="" />
-              <span>{item.name}</span>
-              {/* Edit button to go back to the settings page */}
-              <button onClick={() => navigate(`/settings/${item.name}/${item.id}`)}>Edit</button>
-                {/* Remove button */}
-              <button onClick={() => handleRemove(item.id)}>Remove</button>
-            </div>
-          ))}
+          {selectedItems.map((item) => {
+            const tt = taskTypeById(item.taskTypeId);
+            return (
+              <div className="selected-item" key={item.id}>
+                <img src={iconForTaskType(tt?.icon_file)} alt="" />
+                <span>
+                  {item.name}
+                  {item.parameterName ? ` — ${item.parameterName}` : " (not saved yet)"}
+                </span>
+                <button onClick={() => navigate(`/settings/${item.taskTypeId}/${item.id}`)}>Edit</button>
+                <button onClick={() => handleRemove(item.id)}>Remove</button>
+              </div>
+            );
+          })}
         </div>
       </div>
 
-      {/* Displays all the global variables to be able to edit them */}
       <div style={{ marginTop: "10px" }}>
-      <label>
-        {"Battery name"}:
-        <input
-          type="text"
-          name="Battery name"
-          value={batteryName}
-          onChange={(e) => setBatteryName(e.target.value)}
-        />
-      </label>
+        <label>
+          {"Battery index (unique number)"}:
+          <input type="text" value={batteryIndex} onChange={(e) => setBatteryIndex(e.target.value)} />
+        </label>
 
-      <label>
-        {" Battery Description"}:
-        <input
-          type="text"
-          name="Battery Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-      </label>
+        <label>
+          {" Battery name"}:
+          <input type="text" value={batteryName} onChange={(e) => setBatteryName(e.target.value)} />
+        </label>
 
-      <label>
-        {" BatteryInstructions"}:
-        <input
-          type="text"
-          name="BatteryInstructions"
-          value={BatteryInstructions || ""}
-          onChange={(e) => setBatteryInstructions(e.target.value)}
-        />
-      </label>
+        <label>
+          {" Battery Description"}:
+          <input type="text" value={description} onChange={(e) => setDescription(e.target.value)} />
+        </label>
 
-      <label>
-        {" Footer"}:
-        <input
-          type="text"
-          name="Footer"
-          value={Footer}
-          onChange={(e) => setFooter(e.target.value)}
-        />
-      </label>
-        
-        {/* Can change to a dropdown with the options.
-        Need list of the options */}
-      <label>
-        {" Language"}:
-        <select
-          type="text"
-          name="Language"
-        >
-          <option value="EN">EN</option>
-          onChange={(e) => setLanguage(e.target.value)}
-        </select>
-      </label>
+        <label>
+          {" Battery Instructions"}:
+          <input
+            type="text"
+            value={batteryInstructions || ""}
+            onChange={(e) => setBatteryInstructions(e.target.value)}
+          />
+        </label>
 
-      <label>
-        {" RunAudioTest"}:
-        <select
-          type="text"
-          name="RunAudioTest"
-          >  
-          <option value="true">True</option>
-          <option value="false">False</option> 
-          onChange={(e) => setRunAudioTest(e.target.value)}   
-        </select>
-        
-      </label>
+        <label>
+          {" Footer"}:
+          <input type="text" value={footer} onChange={(e) => setFooter(e.target.value)} />
+        </label>
+
+        <label>
+          {" Language"}:
+          <select value={language} onChange={(e) => setLanguage(e.target.value)}>
+            <option value="EN">EN</option>
+            <option value="FR">FR</option>
+            <option value="KR">KR</option>
+          </select>
+        </label>
+
+        <label>
+          {" RunAudioTest"}:
+          <select value={runAudioTest ? "true" : "false"} onChange={(e) => setRunAudioTest(e.target.value === "true")}>
+            <option value="true">True</option>
+            <option value="false">False</option>
+          </select>
+        </label>
       </div>
-      {/* Save battery button to add the abttery to the battery.json */}
+
       <div style={{ marginTop: "10px" }}>
-        <button onClick={saveAsBattery}>Save as Battery</button>
+        <button onClick={saveAsBattery} disabled={saving}>
+          {saving ? "Saving..." : "Save as Battery"}
+        </button>
+        {saveError && <p style={{ color: "red" }}>{saveError}</p>}
+        {saveResult && (
+          <p style={{ color: "green" }}>
+            Saved battery_index {saveResult.battery_index} with {saveResult.task_count} task(s).
+          </p>
+        )}
       </div>
-      
+
       <div className="available-forms">
         <h2>Select Forms</h2>
         <div className="forms-grid">
-          {/* Displays all the forms */}
-          {forms.map((form, index) => (
-            <div className="form-item" key={index} onClick={() => handleFormClick(form.name)}>
-              <img src={form.imgSrc} alt={form.name} />
-              <p>{form.name}</p>
+          {taskTypes.map((tt) => (
+            <div className="form-item" key={tt.task_type_id} onClick={() => handleFormClick(tt.task_type_id)}>
+              <img src={iconForTaskType(tt.icon_file)} alt={tt.task_name} />
+              <p>{tt.task_name}</p>
             </div>
           ))}
         </div>
       </div>
-      
     </div>
   );
 }

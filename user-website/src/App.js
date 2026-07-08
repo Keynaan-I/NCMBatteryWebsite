@@ -1,11 +1,24 @@
 import React, { useState } from "react";
-import { BrowserRouter as Router, Route, Routes, useNavigate } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import Home from "./Home";
 import FormSettings from "./FormSettings";
-import './App.css';
-import { v4 as uuidv4 } from 'uuid';  // To generate unique IDs
+import Login from "./Login";
+import { AuthProvider, useAuth } from "./AuthContext";
+import "./App.css";
 
-function App() {
+/** Redirects to /login unless a valid admin session is confirmed. */
+function RequireAuth({ children }) {
+  const { status } = useAuth();
+  if (status === "checking") {
+    return <p style={{ padding: "20px" }}>Checking login status...</p>;
+  }
+  if (status === "loggedOut") {
+    return <Navigate to="/login" replace />;
+  }
+  return children;
+}
+
+function AppRoutes() {
   const [selectedItems, setSelectedItems] = useState([]);
 
   const saveFormSettings = (formData) => {
@@ -22,16 +35,37 @@ function App() {
   };
 
   return (
+    <Routes>
+      <Route path="/login" element={<Login />} />
+      <Route
+        path="/"
+        element={
+          <RequireAuth>
+            <Home selectedItems={selectedItems} setSelectedItems={setSelectedItems} />
+          </RequireAuth>
+        }
+      />
+      {/* :taskTypeId is the numeric task_types.task_type_id from the database;
+          :id is a per-selection uuid, so the same task type can be added to a
+          battery more than once (e.g. two Digit Span variants). */}
+      <Route
+        path="/settings/:taskTypeId/:id"
+        element={
+          <RequireAuth>
+            <FormSettings saveFormSettings={saveFormSettings} />
+          </RequireAuth>
+        }
+      />
+    </Routes>
+  );
+}
+
+function App() {
+  return (
     <Router>
-      <Routes>
-        {/* Home page with form selection */}
-        <Route path="/" element={<Home selectedItems={selectedItems} setSelectedItems={setSelectedItems} />} />
-        {/* Form settings page */}
-        <Route
-          path="/settings/:formName/:id"
-          element={<FormSettings selectedItems={selectedItems} saveFormSettings={saveFormSettings} />}
-        />
-      </Routes>
+      <AuthProvider>
+        <AppRoutes />
+      </AuthProvider>
     </Router>
   );
 }
