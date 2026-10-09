@@ -105,3 +105,352 @@ body {
   border: none;
   cursor: pointer;
 }
+
+/* -- Navigation, tables and editors for the library/battery management pages -- */
+
+.nav-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 20px;
+  background-color: #2c3e50;
+  color: white;
+  flex-wrap: wrap;
+}
+
+.nav-bar a {
+  color: #dfe6ee;
+  text-decoration: none;
+  padding: 4px 0;
+}
+
+.nav-bar a.active {
+  color: white;
+  border-bottom: 2px solid white;
+}
+
+.nav-spacer {
+  flex: 1;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.button,
+button {
+  display: inline-block;
+  padding: 6px 12px;
+  border: 1px solid #888;
+  border-radius: 4px;
+  background-color: white;
+  color: #222;
+  text-decoration: none;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+button.primary {
+  background-color: green;
+  border-color: green;
+  color: white;
+  padding: 10px 20px;
+}
+
+button.danger {
+  border-color: #b00020;
+  color: #b00020;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+}
+
+.data-table th,
+.data-table td {
+  text-align: left;
+  padding: 6px 8px;
+  border-bottom: 1px solid #ddd;
+  vertical-align: middle;
+}
+
+.data-table tr.inactive td {
+  color: #999;
+}
+
+.row-actions {
+  white-space: nowrap;
+  display: flex;
+  gap: 6px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 10px 20px;
+  margin: 10px 0;
+}
+
+.form-grid label {
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+}
+
+.form-grid input,
+.form-grid select {
+  padding: 6px;
+  margin-top: 4px;
+}
+
+.mode-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 10px;
+}
+
+.form-settings .mode-picker input {
+  width: auto;
+  margin: 0;
+}
+
+.json-editor textarea {
+  width: 100%;
+  box-sizing: border-box;
+  font-family: Menlo, Consolas, monospace;
+  font-size: 13px;
+  padding: 8px;
+  margin-top: 8px;
+}
+
+.json-editor textarea.invalid {
+  border: 2px solid #b00020;
+}
+
+.json-editor-status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 4px 0 12px;
+  font-size: 13px;
+}
+
+.selected-items.vertical {
+  flex-direction: column;
+}
+
+.selected-item .order {
+  font-weight: bold;
+  width: 24px;
+}
+
+.selected-item .item-text {
+  flex: 1;
+  font-size: 14px;
+}
+
+.hint {
+  color: #555;
+  font-size: 0.9em;
+}
+
+.error-text {
+  color: #b00020;
+}
+
+.warn-text {
+  color: #a15c00;
+}
+
+.ok-text {
+  color: green;
+}
+
+/* -- Battery view page -- */
+
+.details-table th {
+  width: 200px;
+  color: #555;
+  font-weight: normal;
+}
+
+.task-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.task-cell img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.link-button {
+  border: none;
+  background: none;
+  color: #1a5fb4;
+  padding: 0 4px;
+  text-decoration: underline;
+}
+
+.json-view {
+  background-color: #f8f8f8;
+  border: 1px solid #ddd;
+  padding: 8px;
+  max-height: 320px;
+  overflow: auto;
+  font-size: 12px;
+}
+
+.json-view.json-view-full {
+  max-height: none;
+}
+
+/* -- Parameter form (react-jsonschema-form) -- */
+
+.view-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0 12px;
+  flex-wrap: wrap;
+}
+
+.view-toggle button.selected {
+  background-color: #2c3e50;
+  border-color: #2c3e50;
+  color: white;
+}
+
+.parameter-editor fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.parameter-editor legend {
+  display: none; /* the object's own title; the page heading already names the task */
+}
+
+.parameter-editor .form-group {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  column-gap: 16px;
+  align-items: start;
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.parameter-editor .form-group > label,
+.parameter-editor .form-group > .control-label {
+  font-weight: bold;
+  font-size: 14px;
+  padding-top: 6px;
+}
+
+.parameter-editor .form-group > *:not(label):not(.control-label) {
+  grid-column: 2;
+}
+
+/* The outer object's wrapper is also a .form-group; don't put it in the grid. */
+.parameter-editor .rjsf > .form-group {
+  display: block;
+  border-bottom: none;
+}
+
+.parameter-editor .field-description {
+  color: #666;
+  font-size: 12px;
+  margin: 2px 0 4px;
+}
+
+.parameter-editor .required {
+  color: #b00020;
+  margin-left: 2px;
+}
+
+.parameter-editor input[type="text"],
+.parameter-editor input[type="number"],
+.parameter-editor select,
+.parameter-editor textarea {
+  padding: 6px;
+  max-width: 420px;
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 14px;
+  margin: 0;
+}
+
+.parameter-editor .field-radio-group {
+  display: flex;
+  gap: 16px;
+  padding-top: 4px;
+}
+
+.parameter-editor .field-radio-group label,
+.parameter-editor .radio-inline {
+  font-weight: normal;
+}
+
+.parameter-editor .json-field textarea {
+  font-family: Menlo, Consolas, monospace;
+  font-size: 12px;
+  max-width: 600px;
+}
+
+.parameter-editor .json-field textarea.invalid {
+  border: 2px solid #b00020;
+}
+
+.parameter-editor .error-detail,
+.parameter-editor .text-danger {
+  color: #b00020;
+  font-size: 12px;
+  list-style: none;
+  padding: 0;
+  margin: 4px 0 0;
+}
+
+.parameter-editor .array-item {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.parameter-editor .array-item .form-group {
+  display: block;
+  border: none;
+  padding: 0;
+  flex: 1;
+}
+
+.parameter-editor .array-item-toolbox .btn-group {
+  display: flex;
+  gap: 2px;
+}
+
+.parameter-editor .btn {
+  padding: 2px 8px;
+  font-size: 13px;
+}
+
+/* Bootstrap icon classes aren't loaded; label rjsf's icon buttons with text instead. */
+.parameter-editor .glyphicon-plus::before { content: "+ Add"; font-style: normal; }
+.parameter-editor .glyphicon-remove::before { content: "✕"; font-style: normal; }
+.parameter-editor .glyphicon-arrow-up::before { content: "↑"; font-style: normal; }
+.parameter-editor .glyphicon-arrow-down::before { content: "↓"; font-style: normal; }
+.parameter-editor .glyphicon-copy::before { content: "⧉"; font-style: normal; }
