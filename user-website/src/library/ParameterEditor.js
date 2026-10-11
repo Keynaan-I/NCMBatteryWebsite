@@ -72,7 +72,14 @@ function withCatchAllOrder(uiSchema) {
 /** Errors for a parameter object against the task's schema; [] when there is no schema. */
 export function validateParameters(schemaDef, value) {
   if (!schemaDef) return [];
-  return validator.validateFormData(value, schemaDef.schema).errors.map((e) => e.stack);
+  return (
+    validator
+      .validateFormData(value, schemaDef.schema)
+      .errors // a pull-down (oneOf) value error repeats once per option, and a per-method rule
+      // (if/then) adds a generic "must match then schema"; the specific error is reported anyway
+      .filter((e) => e.name !== "const" && e.name !== "if")
+      .map((e) => (e.name === "oneOf" ? `${e.stack.split("'")[1] || e.property} must be one of the listed choices` : e.stack))
+  );
 }
 
 /** A starting parameter object filled with the schema's defaults (for "new from scratch"). */
